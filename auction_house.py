@@ -1,7 +1,10 @@
 #!/usr/bin/env python3
 import argparse
+import json
 import math
+import os
 import subprocess
+import tempfile
 import time
 
 # Positions are (x, y, level) in building.yaml pixel coordinates.
@@ -87,6 +90,9 @@ MAPS = {
         "lifts": [(1600.0, 276.0), (1735.0, 276.0), (194.0, 1537.0), (280.0, 1623.0)],
     },
 }
+
+# swarm_view.py reads the latest auction from here
+AUCTION_FILE = os.path.join(tempfile.gettempdir(), "swarm_auction.json")
 
 LIFT_TIME = 20.0  # seconds to call, ride and exit a lift
 TASK_OVERHEAD = 5.0  # seconds for docking/turning
@@ -195,6 +201,16 @@ def interactive_dashboard(world, robots):
             ranking = sorted(bids, key=lambda r: bids[r][0])
             print("  Ranking: " + " < ".join(f"{r} ({bids[r][0]:.1f}s)" for r in ranking))
             print(f"WINNER: {winner} claims the task!")
+            try:
+                with open(AUCTION_FILE, "w") as f:
+                    json.dump({
+                        "target": target_name,
+                        "target_pos": world["locations"][target_name],
+                        "winner": winner,
+                        "bids": {r: round(b[0], 1) for r, b in bids.items()},
+                    }, f)
+            except OSError:
+                pass
 
             # -R only takes effect together with -F; without the fleet name RMF
             # falls back to its own dispatcher and may pick a different robot.

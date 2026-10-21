@@ -1,0 +1,26 @@
+diff --git a/rmf_demos/config/office/tinyRobot_config.yaml b/rmf_demos/config/office/tinyRobot_config.yaml
+index 3596249..cfe54b9 100644
+--- a/rmf_demos/config/office/tinyRobot_config.yaml
++++ b/rmf_demos/config/office/tinyRobot_config.yaml
+@@ -57,6 +57,8 @@ rmf_fleet:
+     tinyRobot2:
+         charger: "tinyRobot2_charger"
+         # No mention of responsive_wait means the fleet-wide setting will be used
++    tinyRobot3:
++        charger: "tinyRobot3_charger"
+ 
+ fleet_manager:
+   ip: "127.0.0.1"
+diff --git a/rmf_demos_maps/maps/office/office.building.yaml b/rmf_demos_maps/maps/office/office.building.yaml
+index d0a49db..46648cd 100644
+--- a/rmf_demos_maps/maps/office/office.building.yaml
++++ b/rmf_demos_maps/maps/office/office.building.yaml
+@@ -252,7 +252,7 @@ levels:
+       - [2238.471, 477.12299999999999, 0, patrol_A2]
+       - [1366.239, 826.50900000000001, 0, ""]
+       - [1807.172, 818.48000000000002, 0, ""]
+-      - [1365.1089999999999, 1120.3630000000001, 0, ""]
++      - [1365.1089999999999, 1120.3630000000001, 0, tinyRobot3_charger, {is_charger: [4, true], is_holding_point: [4, true], is_parking_spot: [4, true], spawn_robot_name: [1, tinyRobot3], spawn_robot_type: [1, Open-RMF/TinyRobot]}]
+       - [1791.0930000000001, 1110.8050000000001, 0, ""]
+       - [769.86699999999996, 618.14800000000002, 0, ""]
+       - [2016.125, 1310.9549999999999, 0, ""]

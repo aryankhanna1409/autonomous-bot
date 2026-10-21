@@ -13,6 +13,22 @@ python3 auction_house.py --map clinic    # clinic
 
 Destinations can be typed by name or by their number in the list.
 
+## 2D top-down view
+
+`swarm_view.py` draws every floor side by side (L1 | L2 for the clinic) from the
+building.yaml: walls, doors, lanes, waypoints and lifts. On top of that it shows:
+
+- each robot, live from `/fleet_states`, colored by fleet; it moves panels when it changes floor
+- the last auction from `auction_house.py`: a star on the target, a dashed line from the winner, and the bids along the bottom
+
+```bash
+sudo apt install python3-matplotlib python3-yaml     # once
+python3 swarm_view.py --map clinic                   # with the sim running and ROS sourced
+python3 swarm_view.py --map clinic --building path/to/clinic.building.yaml --snapshot clinic.png  # no ROS
+```
+
+Without `--building` it loads the map from your installed (patched) `rmf_demos_maps`.
+
 ## Clinic: 3 robots per floor (6 total)
 
 The stock clinic spawns `deliveryRobot_1/2` on L1 and `tinyRobot_1/2` on L2.

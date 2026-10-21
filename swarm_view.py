@@ -13,6 +13,7 @@ import json
 import math
 import os
 import tempfile
+import time
 
 import yaml
 import matplotlib.pyplot as plt
@@ -118,6 +119,8 @@ class SwarmView:
         self.levels = levels
         self.robots = spawn_states(levels)
         self.node = None
+        self.ros_error = "not started"
+        self.last_msg = None
 
         # Floors share one coordinate frame, so share axes to keep them lined up
         self.fig, axes = plt.subplots(1, len(levels), figsize=(7.5 * len(levels), 7),
@@ -130,7 +133,7 @@ class SwarmView:
             draw_level(ax, name, levels[name], lifts)
         self.status = self.fig.text(0.01, 0.01, "", fontsize=9, family="monospace", va="bottom")
         self.artists = []
-        self.fig.tight_layout(rect=(0, 0.06, 1, 1))
+        self.fig.tight_layout(rect=(0, 0.08, 1, 1))
 
     def attach_ros(self):
         import rclpy
@@ -141,8 +144,12 @@ class SwarmView:
         self.node = rclpy.create_node("swarm_view")
         qos = QoSProfile(depth=100, reliability=ReliabilityPolicy.RELIABLE)
         self.node.create_subscription(FleetState, "/fleet_states", self.on_fleet_state, qos)
+        self.ros_error = None
 
     def on_fleet_state(self, msg):
+        if self.last_msg is None:
+            print(f"Receiving /fleet_states (first from fleet '{msg.name}')")
+        self.last_msg = time.monotonic()
         for robot in msg.robots:
             loc = robot.location
             level = self.levels.get(loc.level_name)
@@ -198,7 +205,16 @@ class SwarmView:
             self.status.set_text(f"Last auction: {auction['target']}  ->  WINNER {winner}\nBids: {bids}")
         else:
             self.status.set_text("No auction yet. Run auction_house.py in another terminal.")
+        self.status.set_text(self.ros_line() + "\n" + self.status.get_text())
         return self.artists
+
+    def ros_line(self):
+        if self.ros_error:
+            return f"ROS: OFF ({self.ros_error}), showing spawn positions only"
+        if self.last_msg is None:
+            return "ROS: waiting for /fleet_states (sim running? same ROS_DOMAIN_ID?)"
+        age = time.monotonic() - self.last_msg
+        return f"ROS: {'LIVE' if age < 2 else 'STALE'}, last /fleet_states {age:.1f}s ago"
 
     def run(self):
         self.anim = FuncAnimation(self.fig, self.update, interval=200, cache_frame_data=False)
@@ -223,8 +239,9 @@ def main():
 
     try:
         view.attach_ros()
-    except ImportError:
-        print("ROS 2 not sourced: showing spawn positions only.")
+    except ImportError as e:
+        view.ros_error = f"can't import {e.name}; source your ROS 2 + rmf workspace first"
+        print(f"ROS 2 not available: {view.ros_error}")
     view.run()
 
 

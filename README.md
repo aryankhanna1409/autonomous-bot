@@ -1,6 +1,6 @@
 <div align="center">
 
-# 🤖 autonomous-bot
+<img src="assets/banner.svg" width="100%" alt="autonomous-bot: ROS 2 robot: SLAM, Nav2, an IoT dashboard and a swarm auction" />
 
 **A ROS 2 differential-drive robot that maps, localizes and navigates on its own, with a live IoT dashboard and a swarm-dispatch simulation.**
 

@@ -1,80 +1,146 @@
-## Precautions:
-1. Make sure the robot & the Remote Desktop is on same Wi-Fi network.
-2. Retrieve the ip address to connect to remote desktop. (_hostname -I_ [for ubuntu])
-3. When Localizing ensure that dynamic laser scan matches the existing SLAM map walls for best results.
+<div align="center">
 
+# 🤖 autonomous-bot
 
-## **Installation & Build Instructions**
-Clone or copy all the files provided in this repository into the src folder of our main ROS 2 workspace.
+**A ROS 2 differential-drive robot that maps, localizes and navigates on its own, with a live IoT dashboard and a swarm-dispatch simulation.**
 
-Navigate to the root of the workspace and build the package using colcon:
+![ROS 2](https://img.shields.io/badge/ROS%202-colcon-22314E?style=flat-square&logo=ros&logoColor=white)
+![Nav2](https://img.shields.io/badge/Nav2-autonomous%20navigation-2f6feb?style=flat-square)
+![SLAM](https://img.shields.io/badge/SLAM-slam__toolbox-0d9488?style=flat-square)
+![MQTT](https://img.shields.io/badge/IoT-MQTT%20%2B%20Flask-660066?style=flat-square)
+![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)
 
+</div>
 
-Bash
+---
 
-_cd ~/our_workspace
-colcon build_
+## ✨ What it does
 
-Source the workspace overlay to make the packages visible to ROS 2:
+| | |
+|---|---|
+| 🧭 **Localization** | IMU fused through an error-state Kalman filter (ESKF), plus LiDAR scan-matching odometry (RF2O) |
+| 🗺️ **Mapping** | 2D SLAM with `slam_toolbox` (Cartographer config also included) using an RPLIDAR |
+| 🚗 **Navigation** | Nav2 path planning with dynamic obstacle avoidance on a saved map |
+| 📡 **IoT dashboard** | Browser dashboard fed by a ROS 2 → MQTT bridge: IMU, velocity commands, ETA, remote stop |
+| 🐝 **Swarm dispatch** | Auction-based task allocation on top of OpenRMF, bidding on distance and completion time |
 
+---
 
-Bash
+## 🏗️ System overview
 
-_source install/setup.bash_
+```mermaid
+flowchart LR
+    subgraph Robot
+        IMU[IMU] --> ESKF[ESKF<br/>imu_setup_py]
+        LIDAR[RPLIDAR<br/>sllidar_ros2] --> RF2O[Laser odometry<br/>rf2o]
+        BASE[base_controller<br/>robot_base] --> TF[(TF + odom)]
+        ESKF --> TF
+        RF2O --> TF
+    end
+    LIDAR --> SLAM[slam_toolbox]
+    TF --> NAV[Nav2]
+    SLAM --> NAV
+    ESKF -. /imu/data .-> BRIDGE[ros2_mqtt_bridge]
+    BRIDGE -- MQTT --> BACKEND[Flask backend]
+    BACKEND --> DASH[Web dashboard]
+```
 
-## **Running the System**
+---
 
-### 1. Bringup the Base Robot
-To launch the hardware bridges, ESKF, LiDAR, and core transformations, we use our main launch file:
+## 📁 Repository layout
 
+| Folder | Purpose |
+|---|---|
+| `robot_description/` | URDF / Xacro model (`tortoisebot_*`), Gazebo plugins and meshes |
+| `robot_base/` | `base_controller`: motors, encoders and odometry |
+| `imu_setup_py/` | IMU publisher and the ESKF localization node |
+| `sllidar_ros2/` | RPLIDAR driver |
+| `rf2o_laser_odometry/` | LiDAR-based odometry |
+| `robot_bringup/` | Launch files and configs (`ekf.yaml`, `nav2_params.yaml`, `slam_params.yaml`) |
+| `website/` | Flask backend, ROS 2 ↔ MQTT bridge and the HTML dashboard |
+| `auction_house.py` | Predictive swarm auction for the OpenRMF office demo |
 
-Bash
+---
 
-_ros2 launch <our_package_name> ultimate.launch.py_
+## ⚙️ Setup
 
-(Note: Replace <our_package_name> with the actual name of our CMake package).
+Copy the packages into the `src/` folder of a ROS 2 workspace, then build:
 
+```bash
+cd ~/your_workspace
+colcon build
+source install/setup.bash
+```
 
-### 2. Mapping (SLAM)
-To map a new environment, we run the asynchronous online mapping node provided by slam_toolbox. In a new terminal, source the workspace and run:
+> **Before you run on hardware**
+> 1. Put the robot and the remote desktop on the **same Wi-Fi network**.
+> 2. Get the robot's IP for the remote session: `hostname -I` (Ubuntu).
+> 3. When localizing, make sure the live laser scan lines up with the walls of the saved SLAM map.
 
+---
 
-Bash
+## 🚀 Running the system
 
-_ros2 launch slam_toolbox online_async_launch.py_
+### 1. Bring up the base robot
+Starts the hardware bridges, ESKF, LiDAR and the TF tree.
 
-Once the map is completely drawn in RViz, remember to save it using the slam_toolbox panel or via the map saver CLI before shutting down the node.
+```bash
+ros2 launch robot_bringup ultimate_launch.launch.py
+```
 
-### 3. Autonomous Navigation
-Once we have a saved map of the room, we can launch the Nav2 stack for autonomous path planning and dynamic obstacle avoidance. Run the following command, pointing it to our saved map and custom parameters file:
+### 2. Map a new environment
+In a second terminal (workspace sourced):
 
+```bash
+ros2 launch slam_toolbox online_async_launch.py
+```
 
-Bash
+Drive around until the map is complete in RViz, then save it from the `slam_toolbox` panel or the map-saver CLI **before** shutting the node down.
 
-_ros2 launch nav2_bringup bringup_launch.py map:=/path/to/our/map.yaml params_file:=/path/to/our/nav2_params.yaml_
+### 3. Navigate autonomously
+With a saved map, start Nav2:
 
+```bash
+ros2 launch nav2_bringup bringup_launch.py \
+  map:=/path/to/map.yaml \
+  params_file:=/path/to/nav2_params.yaml
+```
 
-### 4. IoT Dashboard
-To launch IoT Dashboard first we need to launch ultimate launch given in 1st point. Then we need to download the website folder, navigate inside that directory & launch the python files:
+A ready-made parameter file lives in `robot_bringup/config/nav2_params.yaml`.
 
+### 4. IoT dashboard
+Keep the bringup from step 1 running, then from the `website/` folder:
 
-Bash
+```bash
+python3 autobot_backend.py
+python3 ros2_mqtt_bridge.py
+```
 
-_python3 autobot_backend.py_
+Then open `autobot_dashboard.html` through the backend (the port is set in `autobot_backend.py`). An MQTT broker such as Mosquitto must be reachable from both scripts.
 
-_python3 ros2_mqtt_bridge.py_
+### 5. Swarm simulation
+The swarm layer runs on [OpenRMF](https://github.com/open-rmf/rmf_demos). Install `rmf_demos`, then:
 
+```bash
+# terminal 1: the office world
+ros2 launch rmf_demos_gz office.launch.xml
 
-### 5. Swarm Simulation
-Here, the swarm simulation works on top of already built OpenRMF framework, we have perform optimization through an auction house based bidding system, which calculates shortest distance based on euclidian distance & time taken by individual robots to complete task.
+# terminal 2: the auction dispatcher
+python3 auction_house.py
+```
 
-Follow this Github and install OpenRMF:
+Enter a destination and every robot bids its total ETA: the time left on its current job plus the travel time from where it will be to the new goal. The lowest ETA wins and is dispatched through `rmf_demos_tasks`.
 
-https://github.com/open-rmf/rmf_demos
+---
 
-Once it's installed download the auction_house.py python file, given below is the launch sequence:
+## 🛠️ Hardware
 
-OpenRMF office launch: _ros2 launch rmf_demos_gz office.launch.xml_
+Differential-drive base (TortoiseBot-style chassis), IMU, RPLIDAR A1/A2, and a USB camera for the dashboard's vision features.
 
-Custom auction house: _python3 auction_house.py_
+---
 
+<div align="center">
+
+Built as a team project · ROS 2 · Nav2 · OpenRMF
+
+</div>

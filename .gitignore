@@ -1,0 +1,16 @@
+# Python
+__pycache__/
+*.py[cod]
+
+# ROS 2 / colcon build output
+build/
+install/
+log/
+
+# Editor settings (machine-specific paths)
+.vscode/
+.idea/
+
+# OS
+.DS_Store
+Thumbs.db

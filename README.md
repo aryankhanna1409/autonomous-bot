@@ -14,6 +14,10 @@
 
 ---
 
+> 🔬 **Research context:** this is the public side of the IoT-enabled autonomous mobile robot I work on as a research assistant at Symbiosis Institute of Technology. The target use is moving supplies without someone pushing a trolley: warehouse operations and hospital internal logistics. No field results are claimed here yet.
+
+---
+
 ## ✨ What it does
 
 | | |

@@ -1,36 +1,35 @@
 <div align="center">
 
-<img src="assets/banner.svg" width="100%" alt="autonomous-bot: ROS 2 robot: SLAM, Nav2, an IoT dashboard and a swarm auction" />
+<img src="assets/banner.svg" width="100%" alt="autonomous-bot: stop 1 of 5 in the loop, MOVE" />
 
 **A ROS 2 differential-drive robot that maps, localizes and navigates on its own, with a live IoT dashboard and a swarm-dispatch simulation.**
 
-![ROS 2](https://img.shields.io/badge/ROS%202-colcon-22314E?style=flat-square&logo=ros&logoColor=white)
-![Nav2](https://img.shields.io/badge/Nav2-autonomous%20navigation-2f6feb?style=flat-square)
-![SLAM](https://img.shields.io/badge/SLAM-slam__toolbox-0d9488?style=flat-square)
-![MQTT](https://img.shields.io/badge/IoT-MQTT%20%2B%20Flask-660066?style=flat-square)
-![Python](https://img.shields.io/badge/Python-3.12-3776AB?style=flat-square&logo=python&logoColor=white)
+
+![ROS 2 colcon](https://img.shields.io/badge/ROS_2-colcon-000000?style=flat-square&labelColor=ffffff) ![Nav2 autonomous navigation](https://img.shields.io/badge/Nav2-autonomous_navigation-000000?style=flat-square&labelColor=ffffff) ![SLAM slam_toolbox](https://img.shields.io/badge/SLAM-slam__toolbox-000000?style=flat-square&labelColor=ffffff) ![IoT MQTT + Flask](https://img.shields.io/badge/IoT-MQTT_+_Flask-000000?style=flat-square&labelColor=ffffff) ![Python 3.12](https://img.shields.io/badge/Python-3.12-000000?style=flat-square&labelColor=ffffff)
 
 </div>
 
----
-
-> 🔬 **Research context:** this is the public side of the IoT-enabled autonomous mobile robot I work on as a research assistant at Symbiosis Institute of Technology. The target use is moving supplies without someone pushing a trolley: warehouse operations and hospital internal logistics. No field results are claimed here yet.
+> **Stop 1 of 5 · MOVE.** The loop starts here: a machine that senses its surroundings and moves through them. Next stop: [sentinel](https://github.com/aryankhanna1409/sentinel), what a machine can make of what it sees. See [the whole loop](https://github.com/aryankhanna1409).
 
 ---
 
-## ✨ What it does
+> **Research context:** this is the public side of the IoT-enabled autonomous mobile robot I work on as a research assistant at Symbiosis Institute of Technology. The target use is moving supplies without someone pushing a trolley: warehouse operations and hospital internal logistics. No field results are claimed here yet.
+
+---
+
+## What it does
 
 | | |
 |---|---|
-| 🧭 **Localization** | IMU fused through an error-state Kalman filter (ESKF), plus LiDAR scan-matching odometry (RF2O) |
-| 🗺️ **Mapping** | 2D SLAM with `slam_toolbox` (Cartographer config also included) using an RPLIDAR |
-| 🚗 **Navigation** | Nav2 path planning with dynamic obstacle avoidance on a saved map |
-| 📡 **IoT dashboard** | Browser dashboard fed by a ROS 2 → MQTT bridge: IMU, velocity commands, ETA, remote stop |
-| 🐝 **Swarm dispatch** | Auction-based task allocation on top of OpenRMF, bidding on distance and completion time |
+| **Localization** | IMU fused through an error-state Kalman filter (ESKF), plus LiDAR scan-matching odometry (RF2O) |
+| **Mapping** | 2D SLAM with `slam_toolbox` (Cartographer config also included) using an RPLIDAR |
+| **Navigation** | Nav2 path planning with dynamic obstacle avoidance on a saved map |
+| **IoT dashboard** | Browser dashboard fed by a ROS 2 → MQTT bridge: IMU, velocity commands, ETA, remote stop |
+| **Swarm dispatch** | Auction-based task allocation on top of OpenRMF, bidding on distance and completion time |
 
 ---
 
-## 🏗️ System overview
+## System overview
 
 ```mermaid
 flowchart LR
@@ -51,7 +50,7 @@ flowchart LR
 
 ---
 
-## 📁 Repository layout
+## Repository layout
 
 | Folder | Purpose |
 |---|---|
@@ -66,7 +65,7 @@ flowchart LR
 
 ---
 
-## ⚙️ Setup
+## Setup
 
 Copy the packages into the `src/` folder of a ROS 2 workspace, then build:
 
@@ -83,7 +82,7 @@ source install/setup.bash
 
 ---
 
-## 🚀 Running the system
+## Running the system
 
 ### 1. Bring up the base robot
 Starts the hardware bridges, ESKF, LiDAR and the TF tree.
@@ -137,7 +136,7 @@ Enter a destination and every robot bids its total ETA: the time left on its cur
 
 ---
 
-## 🛠️ Hardware
+## Hardware
 
 Differential-drive base (TortoiseBot-style chassis), IMU, RPLIDAR A1/A2, and a USB camera for the dashboard's vision features.
 
@@ -146,5 +145,15 @@ Differential-drive base (TortoiseBot-style chassis), IMU, RPLIDAR A1/A2, and a U
 <div align="center">
 
 Built as a team project · ROS 2 · Nav2 · OpenRMF
+
+</div>
+
+---
+
+<div align="center">
+
+<img src="assets/loop.svg" width="100%" alt="autonomous-bot is one stop in a loop: move, see, know, act, ship" />
+
+<sub>Part of <a href="https://github.com/aryankhanna1409">Aryan Khanna's portfolio</a>: one loop, five stops, from robots to AI systems.</sub>
 
 </div>

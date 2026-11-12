@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/banner.svg" width="100%" alt="autonomous-bot: stop 1 of 5 in the loop, MOVE" />
+<picture><source media="(prefers-color-scheme: light)" srcset="assets/banner-light.svg" /><img src="assets/banner.svg" width="100%" alt="autonomous-bot: stop 1 of 5 in the loop, MOVE" /></picture>
 
 **A ROS 2 differential-drive robot that maps, localizes and navigates on its own, with a live IoT dashboard and a swarm-dispatch simulation.**
 
@@ -152,7 +152,7 @@ Built as a team project · ROS 2 · Nav2 · OpenRMF
 
 <div align="center">
 
-<img src="assets/loop.svg" width="100%" alt="autonomous-bot is one pour in a loop: move, see, know, act, ship" />
+<picture><source media="(prefers-color-scheme: light)" srcset="assets/loop-light.svg" /><img src="assets/loop.svg" width="100%" alt="autonomous-bot is one pour in a loop: move, see, know, act, ship" /></picture>
 
 <sub>Part of <a href="https://github.com/aryankhanna1409">Aryan Khanna's portfolio</a>: one loop, five pours, from robots to AI systems.</sub>
 

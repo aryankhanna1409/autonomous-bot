@@ -5,11 +5,11 @@
 **A ROS 2 differential-drive robot that maps, localizes and navigates on its own, with a live IoT dashboard and a swarm-dispatch simulation.**
 
 
-![ROS 2 colcon](https://img.shields.io/badge/ROS_2-colcon-000000?style=flat-square&labelColor=ffffff) ![Nav2 autonomous navigation](https://img.shields.io/badge/Nav2-autonomous_navigation-000000?style=flat-square&labelColor=ffffff) ![SLAM slam_toolbox](https://img.shields.io/badge/SLAM-slam__toolbox-000000?style=flat-square&labelColor=ffffff) ![IoT MQTT + Flask](https://img.shields.io/badge/IoT-MQTT_+_Flask-000000?style=flat-square&labelColor=ffffff) ![Python 3.12](https://img.shields.io/badge/Python-3.12-000000?style=flat-square&labelColor=ffffff)
+![ROS 2 colcon](https://img.shields.io/badge/ROS_2-colcon-8a5a22?style=flat-square&labelColor=1d120b) ![Nav2 autonomous navigation](https://img.shields.io/badge/Nav2-autonomous_navigation-8a5a22?style=flat-square&labelColor=1d120b) ![SLAM slam_toolbox](https://img.shields.io/badge/SLAM-slam__toolbox-8a5a22?style=flat-square&labelColor=1d120b) ![IoT MQTT + Flask](https://img.shields.io/badge/IoT-MQTT_+_Flask-8a5a22?style=flat-square&labelColor=1d120b) ![Python 3.12](https://img.shields.io/badge/Python-3.12-8a5a22?style=flat-square&labelColor=1d120b)
 
 </div>
 
-> **Stop 1 of 5 · MOVE.** The loop starts here: a machine that senses its surroundings and moves through them. Next stop: [sentinel](https://github.com/aryankhanna1409/sentinel), what a machine can make of what it sees. See [the whole loop](https://github.com/aryankhanna1409).
+> **Stop 1 of 5 · MOVE · the Grind.** The loop starts here: a machine that senses its surroundings and moves through them. Next stop: [sentinel](https://github.com/aryankhanna1409/sentinel), what a machine can make of what it sees. See [the whole loop](https://github.com/aryankhanna1409).
 
 ---
 
@@ -152,8 +152,8 @@ Built as a team project · ROS 2 · Nav2 · OpenRMF
 
 <div align="center">
 
-<img src="assets/loop.svg" width="100%" alt="autonomous-bot is one stop in a loop: move, see, know, act, ship" />
+<img src="assets/loop.svg" width="100%" alt="autonomous-bot is one pour in a loop: move, see, know, act, ship" />
 
-<sub>Part of <a href="https://github.com/aryankhanna1409">Aryan Khanna's portfolio</a>: one loop, five stops, from robots to AI systems.</sub>
+<sub>Part of <a href="https://github.com/aryankhanna1409">Aryan Khanna's portfolio</a>: one loop, five pours, from robots to AI systems.</sub>
 
 </div>
